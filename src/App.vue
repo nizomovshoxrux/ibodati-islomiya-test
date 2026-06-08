@@ -29,7 +29,7 @@
             </v-list-item>
           </v-list>
         </v-menu>
-        <v-btn v-else variant="tonal" color="primary" size="small" @click="authOpen = true">
+        <v-btn v-else variant="tonal" color="primary" size="small" @click="openLogin">
           <v-icon start icon="mdi-login" /> Kirish
         </v-btn>
       </template>
@@ -68,7 +68,30 @@
     </v-main>
 
     <!-- Auth oynasi -->
-    <AuthDialog v-model="authOpen" />
+    <AuthDialog v-model="authOpen" :start-tab="authStartTab" />
+
+    <!-- Ro'yxatdan o'tishni tavsiya qiluvchi eslatma -->
+    <v-dialog v-model="promptOpen" max-width="420" persistent>
+      <v-card class="pa-2">
+        <v-card-text class="text-center pt-6">
+          <v-avatar color="secondary" size="60" class="mb-3">
+            <v-icon icon="mdi-cloud-lock-outline" size="36" />
+          </v-avatar>
+          <h2 class="text-h6 font-weight-bold mb-2">Natijalaringiz saqlanib qolsin</h2>
+          <p class="text-body-2 text-medium-emphasis">
+            Ro'yxatdan o'tsangiz, test natijalaringiz va statistikangiz bulutda saqlanadi —
+            istalgan qurilmadan kirib, o'sishingizni kuzatib borasiz.
+            Aks holda ma'lumotlar faqat shu qurilmada qoladi va brauzer tarixi tozalansa yo'qoladi.
+          </p>
+        </v-card-text>
+        <v-card-actions class="flex-column ga-2 px-4 pb-4">
+          <v-btn block size="large" color="primary" variant="flat" @click="goRegister">
+            <v-icon start icon="mdi-account-plus" /> Ro'yxatdan o'tish
+          </v-btn>
+          <v-btn block variant="text" @click="dismissPrompt">Hozircha kerak emas</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
     <!-- PWA o'rnatish taklifi -->
     <v-snackbar v-model="showInstall" :timeout="-1" color="surface-bright" location="bottom">
@@ -82,7 +105,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import StartView from './components/StartView.vue'
 import QuizView from './components/QuizView.vue'
 import ResultView from './components/ResultView.vue'
@@ -90,11 +113,14 @@ import StatsView from './components/StatsView.vue'
 import AuthDialog from './components/AuthDialog.vue'
 import { startQuiz, startFromIds, finishQuiz, wrongIds } from './composables/useQuiz.js'
 import { firebaseEnabled } from './firebase.js'
-import { user, logout } from './composables/useAuth.js'
+import { user, authReady, logout } from './composables/useAuth.js'
 
 const screen = ref('start')
 const session = ref(null)
 const authOpen = ref(false)
+const authStartTab = ref('login')
+const promptOpen = ref(false)
+const PROMPT_KEY = 'ibodat_auth_prompt_seen'
 
 const initial = computed(() => {
   const u = user.value
@@ -105,6 +131,31 @@ const initial = computed(() => {
 async function doLogout () {
   await logout()
   screen.value = 'start'
+}
+
+// Kirilmagan bo'lsa, bir marta tavsiya eslatmasini ko'rsatamiz
+function maybePrompt () {
+  if (firebaseEnabled && authReady.value && !user.value &&
+      !sessionStorage.getItem(PROMPT_KEY)) {
+    promptOpen.value = true
+  }
+}
+watch(authReady, () => maybePrompt(), { immediate: true })
+watch(user, (u) => { if (u) promptOpen.value = false })
+
+function goRegister () {
+  sessionStorage.setItem(PROMPT_KEY, '1')
+  promptOpen.value = false
+  authStartTab.value = 'register'
+  authOpen.value = true
+}
+function dismissPrompt () {
+  sessionStorage.setItem(PROMPT_KEY, '1')
+  promptOpen.value = false
+}
+function openLogin () {
+  authStartTab.value = 'login'
+  authOpen.value = true
 }
 
 function onStart (config) {

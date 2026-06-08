@@ -53,13 +53,21 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { login, register, authErrorMessage } from '../composables/useAuth.js'
 
-const props = defineProps({ modelValue: Boolean })
+const props = defineProps({
+  modelValue: Boolean,
+  startTab: { type: String, default: 'login' }
+})
 const emit = defineEmits(['update:modelValue', 'success'])
 
-const tab = ref('login')
+const tab = ref(props.startTab)
+
+// Oyna ochilganda kerakli tabni ko'rsatamiz va xatoni tozalaymiz
+watch(() => props.modelValue, (open) => {
+  if (open) { tab.value = props.startTab; error.value = '' }
+})
 const isLogin = computed(() => tab.value === 'login')
 const name = ref('')
 const email = ref('')
