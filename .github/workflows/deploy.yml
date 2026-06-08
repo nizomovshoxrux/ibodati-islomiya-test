@@ -26,6 +26,11 @@ jobs:
           node-version: 20
           cache: npm
 
+      - name: Pages'ni sozlash (avtomatik yoqish)
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
       - run: npm ci
       - run: npm run build
 
