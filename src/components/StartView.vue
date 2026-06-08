@@ -25,8 +25,8 @@
           <span class="text-body-1 font-weight-bold"><span class="text-primary">1.</span> Mavzu (qism)</span>
           <v-spacer />
           <v-btn
-            size="x-small" variant="tonal" rounded="pill"
-            :color="allParts ? 'primary' : 'grey'"
+            size="small" variant="tonal" rounded="pill" class="px-4"
+            :color="allParts ? 'primary' : 'grey-lighten-1'"
             @click="toggleAll(selParts, allPartIds)"
           >
             <v-icon start :icon="allParts ? 'mdi-check-all' : 'mdi-select-all'" size="small" />
@@ -53,8 +53,8 @@
           <span class="text-body-1 font-weight-bold"><span class="text-primary">2.</span> Savol turlari</span>
           <v-spacer />
           <v-btn
-            size="x-small" variant="tonal" rounded="pill"
-            :color="allTypes ? 'primary' : 'grey'"
+            size="small" variant="tonal" rounded="pill" class="px-4"
+            :color="allTypes ? 'primary' : 'grey-lighten-1'"
             @click="toggleAll(selTypes, allTypeIds)"
           >
             <v-icon start :icon="allTypes ? 'mdi-check-all' : 'mdi-select-all'" size="small" />
@@ -81,8 +81,8 @@
           <span class="text-body-1 font-weight-bold"><span class="text-primary">3.</span> Murakkablik darajasi</span>
           <v-spacer />
           <v-btn
-            size="x-small" variant="tonal" rounded="pill"
-            :color="allDiffs ? 'primary' : 'grey'"
+            size="small" variant="tonal" rounded="pill" class="px-4"
+            :color="allDiffs ? 'primary' : 'grey-lighten-1'"
             @click="toggleAll(selDiffs, allDiffIds)"
           >
             <v-icon start :icon="allDiffs ? 'mdi-check-all' : 'mdi-select-all'" size="small" />
@@ -154,16 +154,20 @@
     </v-card>
 
     <!-- Qo'shimcha -->
-    <v-card class="pa-2 mb-4" variant="tonal" color="surface-bright">
-      <div class="d-flex flex-wrap ga-2 justify-center">
-        <v-btn variant="text" size="small" :disabled="bookmarks.length === 0" @click="$emit('bookmarks', bookmarks.slice())">
-          <v-icon start icon="mdi-star" color="secondary" /> Belgilangan ({{ bookmarks.length }})
-        </v-btn>
-        <v-btn variant="text" size="small" @click="$emit('stats')">
-          <v-icon start icon="mdi-chart-bar" color="primary" /> Statistika
-        </v-btn>
-      </div>
-    </v-card>
+    <div class="d-flex flex-wrap ga-3 mb-4">
+      <v-btn
+        class="flex-grow-1" size="large" variant="tonal" color="secondary"
+        :disabled="bookmarks.length === 0" @click="$emit('bookmarks', bookmarks.slice())"
+      >
+        <v-icon start icon="mdi-star" /> Belgilangan ({{ bookmarks.length }})
+      </v-btn>
+      <v-btn
+        class="flex-grow-1" size="large" variant="tonal" color="primary"
+        @click="$emit('stats')"
+      >
+        <v-icon start icon="mdi-chart-bar" /> Statistika
+      </v-btn>
+    </div>
 
     <p class="text-caption text-center text-medium-emphasis mt-2">
       Manba: «Ibodati Islomiya» — Ahmad Hodiy Maqsudiy · ziyouz.com
@@ -185,10 +189,10 @@ const allPartIds = PARTS.map(p => p.id)
 const allTypeIds = TYPES.map(t => t.id)
 const allDiffIds = DIFFICULTIES.map(d => d.id)
 
-// Sukut bo'yicha hammasi tanlangan, 20 ta
-const selParts = ref([...allPartIds])
-const selTypes = ref([...allTypeIds])
-const selDiffs = ref([...allDiffIds])
+// Sukut bo'yicha har bo'limdan bittadan tanlangan (hammasi emas)
+const selParts = ref([allPartIds[0]])   // 1-qism
+const selTypes = ref(['mcq'])           // variantli test
+const selDiffs = ref(['medium'])        // o'rta daraja
 const selCount = ref(20)
 const useTimer = ref(false)
 const useShuffle = ref(true)
