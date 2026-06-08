@@ -1,112 +1,166 @@
 <template>
   <div>
     <!-- Hero -->
-    <div class="text-center py-6">
-      <v-chip color="secondary" variant="tonal" size="small" class="mb-3">
+    <div class="text-center py-7">
+      <v-chip color="secondary" variant="tonal" size="small" class="mb-3 px-3" rounded="pill">
         <v-icon start icon="mdi-book-open-page-variant" /> Imtihonga tayyorgarlik
       </v-chip>
-      <h1 class="text-h4 font-weight-bold">Ibodati Islomiya</h1>
-      <p class="text-medium-emphasis mt-1">Ahmad Hodiy Maqsudiy kitobi asosidagi testlar</p>
-      <p class="text-caption text-medium-emphasis mt-3">
-        Bazada jami <b class="text-primary">{{ summary.total }}</b> ta savol
-      </p>
+      <h1 class="text-h4 text-sm-h3 brand-title">Ibodati Islomiya</h1>
+      <p class="text-medium-emphasis mt-2">Ahmad Hodiy Maqsudiy kitobi asosidagi testlar</p>
+      <v-chip class="mt-4" color="primary" variant="tonal" size="small" rounded="pill">
+        <v-icon start icon="mdi-database" size="small" /> Bazada {{ summary.total }} ta savol
+      </v-chip>
     </div>
 
     <!-- Sozlamalar -->
-    <v-card class="pa-4 pa-sm-5 mb-4" elevation="6">
-      <div class="text-subtitle-1 font-weight-bold mb-4">Test sozlamalari</div>
+    <v-card class="pa-4 pa-sm-6 mb-4" elevation="8">
+      <div class="d-flex align-center mb-5">
+        <v-icon icon="mdi-tune-variant" color="primary" class="me-2" />
+        <span class="text-h6 font-weight-bold">Test sozlamalari</span>
+      </div>
 
       <!-- Mavzu -->
-      <div class="mb-5">
-        <div class="text-body-2 font-weight-medium mb-2">1. Mavzu (qism)</div>
-        <v-chip-group v-model="selParts" multiple column>
-          <v-chip
-            v-for="p in PARTS" :key="p.id" :value="p.id"
-            filter variant="outlined" color="primary"
+      <div class="mb-6">
+        <div class="d-flex align-center mb-3">
+          <span class="text-body-1 font-weight-bold"><span class="text-primary">1.</span> Mavzu (qism)</span>
+          <v-spacer />
+          <v-btn
+            size="x-small" variant="tonal" rounded="pill"
+            :color="allParts ? 'primary' : 'grey'"
+            @click="toggleAll(selParts, allPartIds)"
           >
-            {{ p.short }}
-            <span class="text-caption ms-1 text-medium-emphasis">{{ summary.byPart[p.id] || 0 }}</span>
+            <v-icon start :icon="allParts ? 'mdi-check-all' : 'mdi-select-all'" size="small" />
+            Barchasi
+          </v-btn>
+        </div>
+        <div class="d-flex flex-wrap ga-2">
+          <v-chip
+            v-for="p in PARTS" :key="p.id"
+            class="sel-chip" :class="{ 'is-on': selParts.includes(p.id) }"
+            :variant="selParts.includes(p.id) ? 'flat' : 'outlined'"
+            :color="selParts.includes(p.id) ? 'primary' : 'grey-darken-1'"
+            @click="toggle(selParts, p.id)"
+          >
+            <v-icon start :icon="selParts.includes(p.id) ? 'mdi-check-circle' : 'mdi-circle-outline'" size="small" />
+            {{ p.short }}<span class="cnt">{{ summary.byPart[p.id] || 0 }}</span>
           </v-chip>
-        </v-chip-group>
+        </div>
       </div>
 
       <!-- Tur -->
-      <div class="mb-5">
-        <div class="text-body-2 font-weight-medium mb-2">2. Savol turlari</div>
-        <v-chip-group v-model="selTypes" multiple column>
-          <v-chip
-            v-for="t in TYPES" :key="t.id" :value="t.id"
-            filter variant="outlined" color="primary"
+      <div class="mb-6">
+        <div class="d-flex align-center mb-3">
+          <span class="text-body-1 font-weight-bold"><span class="text-primary">2.</span> Savol turlari</span>
+          <v-spacer />
+          <v-btn
+            size="x-small" variant="tonal" rounded="pill"
+            :color="allTypes ? 'primary' : 'grey'"
+            @click="toggleAll(selTypes, allTypeIds)"
           >
-            <v-icon start :icon="t.icon" size="small" /> {{ t.name }}
-            <span class="text-caption ms-1 text-medium-emphasis">{{ summary.byType[t.id] || 0 }}</span>
+            <v-icon start :icon="allTypes ? 'mdi-check-all' : 'mdi-select-all'" size="small" />
+            Barchasi
+          </v-btn>
+        </div>
+        <div class="d-flex flex-wrap ga-2">
+          <v-chip
+            v-for="t in TYPES" :key="t.id"
+            class="sel-chip" :class="{ 'is-on': selTypes.includes(t.id) }"
+            :variant="selTypes.includes(t.id) ? 'flat' : 'outlined'"
+            :color="selTypes.includes(t.id) ? 'primary' : 'grey-darken-1'"
+            @click="toggle(selTypes, t.id)"
+          >
+            <v-icon start :icon="selTypes.includes(t.id) ? 'mdi-check-circle' : t.icon" size="small" />
+            {{ t.name }}<span class="cnt">{{ summary.byType[t.id] || 0 }}</span>
           </v-chip>
-        </v-chip-group>
+        </div>
       </div>
 
       <!-- Daraja -->
-      <div class="mb-5">
-        <div class="text-body-2 font-weight-medium mb-2">3. Murakkablik darajasi</div>
-        <v-chip-group v-model="selDiffs" multiple column>
-          <v-chip
-            v-for="d in DIFFICULTIES" :key="d.id" :value="d.id"
-            filter variant="outlined" :color="d.color"
+      <div class="mb-6">
+        <div class="d-flex align-center mb-3">
+          <span class="text-body-1 font-weight-bold"><span class="text-primary">3.</span> Murakkablik darajasi</span>
+          <v-spacer />
+          <v-btn
+            size="x-small" variant="tonal" rounded="pill"
+            :color="allDiffs ? 'primary' : 'grey'"
+            @click="toggleAll(selDiffs, allDiffIds)"
           >
-            {{ d.name }}
-            <span class="text-caption ms-1 text-medium-emphasis">{{ summary.byDiff[d.id] || 0 }}</span>
+            <v-icon start :icon="allDiffs ? 'mdi-check-all' : 'mdi-select-all'" size="small" />
+            Barchasi
+          </v-btn>
+        </div>
+        <div class="d-flex flex-wrap ga-2">
+          <v-chip
+            v-for="d in DIFFICULTIES" :key="d.id"
+            class="sel-chip" :class="{ 'is-on': selDiffs.includes(d.id) }"
+            :variant="selDiffs.includes(d.id) ? 'flat' : 'outlined'"
+            :color="selDiffs.includes(d.id) ? d.color : 'grey-darken-1'"
+            @click="toggle(selDiffs, d.id)"
+          >
+            <v-icon start :icon="selDiffs.includes(d.id) ? 'mdi-check-circle' : 'mdi-circle-outline'" size="small" />
+            {{ d.name }}<span class="cnt">{{ summary.byDiff[d.id] || 0 }}</span>
           </v-chip>
-        </v-chip-group>
+        </div>
       </div>
 
       <!-- Savol soni -->
       <div class="mb-5">
-        <div class="text-body-2 font-weight-medium mb-2">4. Savollar soni</div>
-        <v-chip-group v-model="selCount" mandatory>
-          <v-chip v-for="c in COUNTS" :key="c" :value="c" filter variant="outlined" color="secondary">{{ c }}</v-chip>
-          <v-chip :value="'all'" filter variant="outlined" color="secondary">Hammasi</v-chip>
-        </v-chip-group>
+        <div class="text-body-1 font-weight-bold mb-3"><span class="text-primary">4.</span> Savollar soni</div>
+        <div class="d-flex flex-wrap ga-2">
+          <v-chip
+            v-for="c in COUNTS" :key="c"
+            class="sel-chip" :class="{ 'is-on': selCount === c }"
+            :variant="selCount === c ? 'flat' : 'outlined'"
+            :color="selCount === c ? 'secondary' : 'grey-darken-1'"
+            @click="selCount = c"
+          >{{ c }}</v-chip>
+          <v-chip
+            class="sel-chip" :class="{ 'is-on': selCount === 'all' }"
+            :variant="selCount === 'all' ? 'flat' : 'outlined'"
+            :color="selCount === 'all' ? 'secondary' : 'grey-darken-1'"
+            @click="selCount = 'all'"
+          ><v-icon start icon="mdi-infinity" size="small" /> Hammasi</v-chip>
+        </div>
       </div>
 
       <!-- Variantlar -->
-      <div class="d-flex flex-wrap ga-4 mb-2">
-        <v-switch v-model="useTimer" color="primary" density="compact" hide-details
-          label="Taymer (har savolga 45s)" />
-        <v-switch v-model="useShuffle" color="primary" density="compact" hide-details
+      <div class="d-flex flex-wrap ga-4 mb-4">
+        <v-switch v-model="useTimer" color="primary" density="compact" hide-details inset
+          label="Taymer (45s)" />
+        <v-switch v-model="useShuffle" color="primary" density="compact" hide-details inset
           label="Aralashtirish" />
       </div>
 
-      <!-- Mavjudlik haqida -->
+      <!-- Mavjudlik -->
       <v-alert
         :type="available === 0 ? 'warning' : 'info'"
-        variant="tonal" density="compact" class="mb-4 text-body-2"
+        variant="tonal" density="compact" class="mb-4 text-body-2" rounded="lg"
       >
         <template v-if="available === 0">
           Tanlangan shartlar bo'yicha savol topilmadi. Filtrlarni kengaytiring.
         </template>
         <template v-else>
-          Tanlov bo'yicha <b>{{ available }}</b> ta savol mavjud.
-          Testda <b>{{ effectiveCount }}</b> tasi beriladi.
+          Tanlov bo'yicha <b>{{ available }}</b> ta savol mavjud. Testda <b>{{ effectiveCount }}</b> tasi beriladi.
         </template>
       </v-alert>
 
       <v-btn
-        block size="large" color="primary"
-        :disabled="available === 0"
-        @click="start"
+        block size="x-large" color="primary" class="glow-btn font-weight-bold"
+        :disabled="available === 0" @click="start"
       >
         Testni boshlash
-        <v-icon end icon="mdi-arrow-right" />
+        <v-icon end icon="mdi-arrow-right-circle" />
       </v-btn>
     </v-card>
 
     <!-- Qo'shimcha -->
-    <v-card class="pa-2 mb-4" variant="tonal">
+    <v-card class="pa-2 mb-4" variant="tonal" color="surface-bright">
       <div class="d-flex flex-wrap ga-2 justify-center">
         <v-btn variant="text" size="small" :disabled="bookmarks.length === 0" @click="$emit('bookmarks', bookmarks.slice())">
           <v-icon start icon="mdi-star" color="secondary" /> Belgilangan ({{ bookmarks.length }})
         </v-btn>
         <v-btn variant="text" size="small" @click="$emit('stats')">
-          <v-icon start icon="mdi-chart-bar" /> Statistika
+          <v-icon start icon="mdi-chart-bar" color="primary" /> Statistika
         </v-btn>
       </div>
     </v-card>
@@ -127,13 +181,31 @@ const emit = defineEmits(['start', 'bookmarks', 'stats'])
 
 const summary = bankSummary()
 
-// Sukut bo'yicha: barcha qism, barcha tur, barcha daraja, 20 ta
-const selParts = ref(PARTS.map(p => p.id))
-const selTypes = ref(TYPES.map(t => t.id))
-const selDiffs = ref(DIFFICULTIES.map(d => d.id))
+const allPartIds = PARTS.map(p => p.id)
+const allTypeIds = TYPES.map(t => t.id)
+const allDiffIds = DIFFICULTIES.map(d => d.id)
+
+// Sukut bo'yicha hammasi tanlangan, 20 ta
+const selParts = ref([...allPartIds])
+const selTypes = ref([...allTypeIds])
+const selDiffs = ref([...allDiffIds])
 const selCount = ref(20)
 const useTimer = ref(false)
 const useShuffle = ref(true)
+
+const allParts = computed(() => selParts.value.length === allPartIds.length)
+const allTypes = computed(() => selTypes.value.length === allTypeIds.length)
+const allDiffs = computed(() => selDiffs.value.length === allDiffIds.length)
+
+function toggle (list, val) {
+  const i = list.indexOf(val)
+  if (i === -1) list.push(val)
+  else if (list.length > 1) list.splice(i, 1) // kamida bittasi qolsin
+}
+function toggleAll (list, all) {
+  if (list.length === all.length) { list.splice(1, list.length - 1) } // bittaga tushir
+  else { list.splice(0, list.length, ...all) }                        // hammasini tanla
+}
 
 const available = computed(() => filterQuestions({
   parts: selParts.value, types: selTypes.value, difficulties: selDiffs.value

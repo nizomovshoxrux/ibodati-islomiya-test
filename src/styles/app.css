@@ -1,24 +1,54 @@
 html { overflow-y: auto; }
+
 body {
   background:
-    radial-gradient(1200px 600px at 50% -10%, #1c2a25 0%, #0f1419 55%) fixed;
+    radial-gradient(900px 500px at 12% -8%, rgba(19,192,138,.18) 0%, transparent 55%),
+    radial-gradient(800px 500px at 100% 0%, rgba(245,181,61,.12) 0%, transparent 50%),
+    radial-gradient(1000px 700px at 50% 110%, rgba(19,192,138,.10) 0%, transparent 55%),
+    #070b16 fixed;
 }
 #app { min-height: 100vh; }
 
-/* O'qishni qulayroq qilish uchun savol matni */
-.q-text { line-height: 1.55; font-weight: 600; }
+/* Kartalarga nozik gradient va ramка */
+.v-card {
+  background-image: linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,0)) !important;
+  border: 1px solid rgba(255,255,255,.07) !important;
+  backdrop-filter: blur(4px);
+}
+
+/* Asosiy tugmaga yengil "glow" */
+.glow-btn { box-shadow: 0 8px 26px rgba(19,192,138,.35) !important; }
+
+/* O'qish uchun savol matni */
+.q-text { line-height: 1.55; font-weight: 700; letter-spacing: .2px; }
 .q-text .blank {
-  color: #d4a23a; letter-spacing: 2px; font-weight: 700;
+  color: #f5b53d; letter-spacing: 2px; font-weight: 800;
+}
+
+/* Tanlov chiplari — professional ko'rinish */
+.sel-chip {
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+  transition: transform .12s ease, box-shadow .15s ease, background .15s ease !important;
+  letter-spacing: .2px;
+}
+.sel-chip:hover { transform: translateY(-1px); }
+.sel-chip.is-on { box-shadow: 0 6px 18px rgba(19,192,138,.28); }
+.sel-chip .cnt {
+  font-size: .7rem; font-weight: 700; opacity: .85; margin-inline-start: 6px;
+  padding: 1px 7px; border-radius: 999px; background: rgba(0,0,0,.22);
 }
 
 /* Variant tugmalari uzun matnda chiroyli o'ralsin */
 .opt-btn {
   white-space: normal !important;
   height: auto !important;
-  min-height: 52px;
+  min-height: 56px;
   text-align: start;
-  padding-top: 12px !important;
-  padding-bottom: 12px !important;
+  padding-top: 13px !important;
+  padding-bottom: 13px !important;
+  border-radius: 14px !important;
+  font-weight: 600;
 }
 .opt-btn .v-btn__content { width: 100%; justify-content: flex-start; }
 
@@ -26,13 +56,22 @@ body {
 .arabic { direction: rtl; font-size: 1.15em; line-height: 2; }
 
 /* Animatsiya */
-.fade-enter-active, .fade-leave-active { transition: opacity .2s ease, transform .2s ease; }
-.fade-enter-from { opacity: 0; transform: translateY(8px); }
+.fade-enter-active, .fade-leave-active { transition: opacity .22s ease, transform .22s ease; }
+.fade-enter-from { opacity: 0; transform: translateY(10px); }
 .fade-leave-to { opacity: 0; }
 
 /* Mobil safe-area (notch) */
 .safe-pad { padding-bottom: env(safe-area-inset-bottom); }
 
 /* Scrollbar */
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-thumb { background: #2c3947; border-radius: 8px; }
+::-webkit-scrollbar { width: 9px; }
+::-webkit-scrollbar-thumb { background: #243056; border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: #2e3c66; }
+
+/* Sarlavhaga gradient matn */
+.brand-title {
+  background: linear-gradient(92deg, #13c08a 0%, #6fe9c2 45%, #f5b53d 100%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800; letter-spacing: .5px;
+}
