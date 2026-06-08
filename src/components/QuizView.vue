@@ -114,8 +114,19 @@
     </v-card>
 
     <!-- Pastki tugma -->
+    <!-- IMTIHON rejimi (mcq/tf/fill): javob ko'rsatilmaydi, to'g'ridan-to'g'ri Keyingi -->
     <v-btn
-      v-if="!revealed"
+      v-if="exam && q.type !== 'open'"
+      block size="large" color="primary"
+      :disabled="!canCheck" @click="examAdvance"
+    >
+      {{ isLast ? 'Yakunlash' : 'Keyingi' }}
+      <v-icon end :icon="isLast ? 'mdi-flag-checkered' : 'mdi-arrow-right'" />
+    </v-btn>
+
+    <!-- MASHQ rejimi yoki ochiq savol: avval tekshirish -->
+    <v-btn
+      v-else-if="!revealed"
       block size="large" color="primary"
       :disabled="!canCheck" @click="check"
     >Tekshirish</v-btn>
@@ -141,6 +152,7 @@ const letters = ['A', 'B', 'C', 'D', 'E', 'F']
 
 const q = computed(() => currentQuestion())
 const cfg = computed(() => quiz.config || {})
+const exam = computed(() => !!cfg.value.exam)
 const index = computed(() => quiz.index)
 const total = computed(() => quiz.queue.length)
 const progress = computed(() => ((quiz.index) / quiz.queue.length) * 100)
@@ -224,6 +236,19 @@ function check () {
   submitAnswer(correct, given)
 }
 
+// Imtihon rejimi: javobni jimgina qayd qilib, keyingisiga o'tadi (ko'rsatmasdan)
+function gradeObjective () {
+  const qq = q.value
+  if (qq.type === 'mcq') return { correct: selected.value === qq.answer, given: qq.options[selected.value] }
+  if (qq.type === 'tf') return { correct: selected.value === qq.answer, given: selected.value ? "To'g'ri" : "Noto'g'ri" }
+  return { correct: checkFill(textAnswer.value, qq.answer), given: textAnswer.value }
+}
+function examAdvance () {
+  const { correct, given } = gradeObjective()
+  submitAnswer(correct, given)
+  next()
+}
+
 function selfGrade (correct) {
   lastCorrect.value = correct
   graded.value = true
@@ -263,6 +288,13 @@ function startTimer () {
 function stopTimer () { if (timerId) { clearInterval(timerId); timerId = null } }
 function onTimeout () {
   const qq = q.value
+  // Imtihon rejimi (mcq/tf/fill): jimgina qayd qilib keyingisiga o'tadi
+  if (exam.value && qq.type !== 'open') {
+    const { correct, given } = gradeObjective()
+    submitAnswer(correct, given || '(vaqt tugadi)')
+    next()
+    return
+  }
   if (qq.type === 'open') {
     // vaqt tugadi — namunani ko'rsatib, xato deb baholaymiz
     revealed.value = true

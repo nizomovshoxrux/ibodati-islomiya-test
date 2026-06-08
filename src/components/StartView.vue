@@ -124,11 +124,19 @@
       </div>
 
       <!-- Variantlar -->
-      <div class="d-flex flex-wrap ga-4 mb-4">
+      <div class="mb-4">
+        <v-switch v-model="useExam" color="primary" density="compact" hide-details inset
+          label="Imtihon rejimi" />
+        <p class="text-caption text-medium-emphasis ms-1" style="margin-top:-6px">
+          <template v-if="useExam">
+            <v-icon icon="mdi-information-outline" size="x-small" /> To'g'ri javoblar faqat test <b>tugagandan keyin</b> ko'rsatiladi.
+          </template>
+          <template v-else>
+            <v-icon icon="mdi-information-outline" size="x-small" /> Mashq rejimi: har savoldan keyin to'g'ri javob ko'rsatiladi.
+          </template>
+        </p>
         <v-switch v-model="useTimer" color="primary" density="compact" hide-details inset
-          label="Taymer (45s)" />
-        <v-switch v-model="useShuffle" color="primary" density="compact" hide-details inset
-          label="Aralashtirish" />
+          label="Taymer — har savolga 45 soniya" class="mt-1" />
       </div>
 
       <!-- Mavjudlik -->
@@ -195,7 +203,7 @@ const selTypes = ref(['mcq'])           // variantli test
 const selDiffs = ref(['medium'])        // o'rta daraja
 const selCount = ref(20)
 const useTimer = ref(false)
-const useShuffle = ref(true)
+const useExam = ref(true)   // standart: imtihon rejimi (javoblar oxirida)
 
 const allParts = computed(() => selParts.value.length === allPartIds.length)
 const allTypes = computed(() => selTypes.value.length === allTypeIds.length)
@@ -226,8 +234,9 @@ function start () {
     types: selTypes.value.slice(),
     difficulties: selDiffs.value.slice(),
     count: selCount.value === 'all' ? available.value : selCount.value,
-    shuffle: useShuffle.value,
-    timer: useTimer.value
+    shuffle: true,        // savollar har doim aralashtiriladi
+    timer: useTimer.value,
+    exam: useExam.value
   })
 }
 </script>
