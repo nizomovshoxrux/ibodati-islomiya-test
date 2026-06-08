@@ -1,0 +1,38 @@
+html { overflow-y: auto; }
+body {
+  background:
+    radial-gradient(1200px 600px at 50% -10%, #1c2a25 0%, #0f1419 55%) fixed;
+}
+#app { min-height: 100vh; }
+
+/* O'qishni qulayroq qilish uchun savol matni */
+.q-text { line-height: 1.55; font-weight: 600; }
+.q-text .blank {
+  color: #d4a23a; letter-spacing: 2px; font-weight: 700;
+}
+
+/* Variant tugmalari uzun matnda chiroyli o'ralsin */
+.opt-btn {
+  white-space: normal !important;
+  height: auto !important;
+  min-height: 52px;
+  text-align: start;
+  padding-top: 12px !important;
+  padding-bottom: 12px !important;
+}
+.opt-btn .v-btn__content { width: 100%; justify-content: flex-start; }
+
+/* Arabcha matnlar uchun */
+.arabic { direction: rtl; font-size: 1.15em; line-height: 2; }
+
+/* Animatsiya */
+.fade-enter-active, .fade-leave-active { transition: opacity .2s ease, transform .2s ease; }
+.fade-enter-from { opacity: 0; transform: translateY(8px); }
+.fade-leave-to { opacity: 0; }
+
+/* Mobil safe-area (notch) */
+.safe-pad { padding-bottom: env(safe-area-inset-bottom); }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-thumb { background: #2c3947; border-radius: 8px; }

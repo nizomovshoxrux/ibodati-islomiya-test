@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="110" fill="#2f9e6f"/>
+  <g fill="#fff">
+    <!-- gumbaz / mehrob -->
+    <path d="M256 96c-30 0-54 24-54 54v8h-44c-12 0-22 10-22 22v176c0 12 10 22 22 22h196c12 0 22-10 22-22V180c0-12-10-22-22-22h-44v-8c0-30-24-54-54-54z" fill="#fff" opacity="0.18"/>
+    <path d="M256 120c-18 0-32 14-32 32v18h64v-18c0-18-14-32-32-32z" />
+    <rect x="150" y="200" width="212" height="170" rx="14" opacity="0.0"/>
+    <!-- kitob sahifalari -->
+    <path d="M168 224h74c8 0 14 6 14 14v118c-6-6-14-9-22-9h-66z" />
+    <path d="M344 224h-74c-8 0-14 6-14 14v118c6-6 14-9 22-9h66z" opacity="0.82"/>
+    <circle cx="256" cy="170" r="7" fill="#d4a23a"/>
+  </g>
+</svg>
