@@ -79,8 +79,8 @@
           </v-avatar>
           <h2 class="text-h6 font-weight-bold mb-2">Natijalaringiz saqlanib qolsin</h2>
           <p class="text-body-2 text-medium-emphasis">
-            Ro'yxatdan o'tsangiz, test natijalaringiz va statistikangiz bulutda saqlanadi —
-            istalgan qurilmadan kirib, o'sishingizni kuzatib borasiz.
+            Ro'yxatdan o'tsangiz, test natijalaringiz va statistikangiz bazada saqlanadi —
+            istalgan qurilmadan kirib, rivojlanishingizni kuzatib borasiz.
             Aks holda ma'lumotlar faqat shu qurilmada qoladi va brauzer tarixi tozalansa yo'qoladi.
           </p>
         </v-card-text>

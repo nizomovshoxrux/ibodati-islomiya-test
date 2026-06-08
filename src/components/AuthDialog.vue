@@ -8,7 +8,7 @@
             <v-icon icon="mdi-account-circle" size="36" />
           </v-avatar>
           <h2 class="text-h6 font-weight-bold">{{ isLogin ? 'Hisobga kirish' : 'Ro\'yxatdan o\'tish' }}</h2>
-          <p class="text-caption text-medium-emphasis">Natijalaringiz bulutda saqlanadi</p>
+          <p class="text-caption text-medium-emphasis">Natijalaringiz bazada saqlanadi</p>
         </div>
 
         <v-tabs v-model="tab" grow color="primary" class="mb-4">

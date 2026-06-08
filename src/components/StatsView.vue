@@ -5,13 +5,13 @@
         <h2 class="text-h6 font-weight-bold">📊 Statistika</h2>
         <v-spacer />
         <v-chip v-if="user" size="small" color="success" variant="tonal" class="me-2">
-          <v-icon start icon="mdi-cloud-check" size="small" /> Bulutda saqlanmoqda
+          <v-icon start icon="mdi-database-check" size="small" /> Bazada saqlanmoqda
         </v-chip>
         <v-btn v-if="stats.totalAnswered" icon="mdi-delete-outline" size="small" variant="text" color="error" @click="confirmReset" />
       </div>
 
       <v-alert v-if="firebaseEnabled && !user" type="info" variant="tonal" density="compact" class="mb-4 text-body-2" rounded="lg">
-        <v-icon icon="mdi-cloud-outline" size="small" /> Hisobga kiring — natijalaringiz bulutda saqlanadi va istalgan qurilmadan ko'rinadi.
+        <v-icon icon="mdi-database-outline" size="small" /> Hisobga kiring — natijalaringiz bazada saqlanadi va istalgan qurilmadan ko'rinadi.
       </v-alert>
 
       <div v-if="stats.totalAnswered === 0" class="text-center text-medium-emphasis py-8">
