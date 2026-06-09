@@ -282,7 +282,7 @@ export default [
   {
     id: 'p3-029', part: 3, topic: 'Namoz zikrlari', type: 'fill', difficulty: 'medium',
     q: 'Namozda Fotiha surasidan so\'ng «______» deyiladi (sunnat).',
-    answer: ['omin', 'оmin'],
+    answer: ['omin', 'omin'],
     explanation: 'Fotihadan so\'ng «Omin» deyish sunnatdir.',
     ref: '3-qism · Namoz sunnatlari'
   },
