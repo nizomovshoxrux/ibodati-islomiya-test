@@ -6,6 +6,16 @@
         <v-icon icon="mdi-book-open-page-variant" color="primary" class="me-1" size="small" /> Ibodat Test
       </v-app-bar-title>
       <template #append>
+        <!-- O'rnatish tugmasi (faqat o'rnatish mumkin bo'lganda) -->
+        <v-tooltip v-if="canInstall" text="Ilovani qurilmaga o'rnatish" location="bottom">
+          <template #activator="{ props }">
+            <v-btn v-bind="props" variant="tonal" color="secondary" size="small" class="me-2" @click="doInstall">
+              <v-icon icon="mdi-download" />
+              <span class="d-none d-sm-inline ms-1">O'rnatish</span>
+            </v-btn>
+          </template>
+        </v-tooltip>
+
         <v-menu v-if="user">
           <template #activator="{ props }">
             <v-btn v-bind="props" variant="text" class="text-none">
@@ -70,6 +80,8 @@
     <!-- Auth oynasi -->
     <AuthDialog v-model="authOpen" :start-tab="authStartTab" />
 
+    <!-- PWA o'rnatish endi yuqori paneldagi tugma orqali (snackbar olib tashlandi) -->
+
     <!-- Ro'yxatdan o'tishni tavsiya qiluvchi eslatma -->
     <v-dialog v-model="promptOpen" max-width="420" persistent>
       <v-card class="pa-2">
@@ -93,14 +105,6 @@
       </v-card>
     </v-dialog>
 
-    <!-- PWA o'rnatish taklifi -->
-    <v-snackbar v-model="showInstall" :timeout="-1" color="surface-bright" location="bottom">
-      <v-icon icon="mdi-download" class="me-2" /> Ilovani telefon/kompyuterga o'rnatish mumkin
-      <template #actions>
-        <v-btn variant="text" color="primary" @click="doInstall">O'rnatish</v-btn>
-        <v-btn variant="text" @click="showInstall = false">Yopish</v-btn>
-      </template>
-    </v-snackbar>
   </v-app>
 </template>
 
@@ -175,18 +179,26 @@ function onRetryWrong () {
   if (ids.length) { startFromIds(ids); screen.value = 'quiz' }
 }
 
-// ---- PWA install ----
-const showInstall = ref(false)
+// ---- PWA install (navigatsiyadagi tugma orqali) ----
+const canInstall = ref(false)
 let deferredPrompt = null
 onMounted(() => {
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault()
     deferredPrompt = e
-    showInstall.value = true
+    canInstall.value = true
+  })
+  // O'rnatilgandan keyin tugmani yashiramiz
+  window.addEventListener('appinstalled', () => {
+    canInstall.value = false
+    deferredPrompt = null
   })
 })
 async function doInstall () {
-  showInstall.value = false
-  if (deferredPrompt) { deferredPrompt.prompt(); deferredPrompt = null }
+  if (!deferredPrompt) return
+  deferredPrompt.prompt()
+  await deferredPrompt.userChoice
+  deferredPrompt = null
+  canInstall.value = false
 }
 </script>
